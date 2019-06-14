@@ -1,0 +1,30 @@
+extends layout
+block content
+
+  .row
+    .col-md-8.mb-4
+    
+      //- If the article belongs logged in user, tell them if the blog is priavte
+      if user
+        if user.id == blog.author.id && !blog.visible
+          p
+            span.badge.badge-info Private blog
+      
+      //- Blog title
+      h1= blog.title
+      .my-border.pl-3
+        //- Blog author, with link to author's profile
+        p.m-0.lead By:&nbsp
+          a(href=blog.author.url title='All blogs by ' + blog.author.username) #{blog.author.username}
+        //- Blog date
+        p.font-italic.font-weight-light= blog.date
+    
+      //- Blog content
+      p.content= blog.content
+      //- If the article belongs logged in user, show them the update and delete buttons
+      if user
+        if user.id == blog.author.id
+          p
+            a.btn.btn-secondary(role='button', href=blog.url + '/update') Update
+          p
+            a.btn.btn-danger.delete-blog(href='#', data-id=blog._id) Delete

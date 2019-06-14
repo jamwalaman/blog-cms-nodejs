@@ -1,0 +1,27 @@
+{
+  "name": "blog-cms-nodejs",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node ./bin/www",
+    "devstart": "nodemon ./bin/www"
+  },
+  "dependencies": {
+    "async": "^2.6.2",
+    "bcryptjs": "^2.4.3",
+    "connect-flash": "^0.1.1",
+    "cookie-parser": "~1.4.3",
+    "debug": "~2.6.9",
+    "express": "~4.16.0",
+    "express-messages": "^1.0.1",
+    "express-session": "^1.16.1",
+    "express-validator": "^5.3.1",
+    "http-errors": "~1.6.2",
+    "moment": "^2.24.0",
+    "mongoose": "^5.5.5",
+    "morgan": "~1.9.0",
+    "passport": "^0.4.0",
+    "passport-local": "^1.0.0",
+    "pug": "^2.0.3"
+  }
+}

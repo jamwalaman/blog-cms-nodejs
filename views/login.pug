@@ -1,0 +1,32 @@
+extends layout
+block content
+
+  h1= title
+  
+  .row
+    .col-md-8
+    
+      form(method='POST', action='')
+          
+        .form-group
+          label(for='email') Email
+          input(
+            type='text'  
+            name='email'
+            id='email'
+            class='form-control'
+            placeholder='Email'
+            autofocus
+          )
+          
+        .form-group
+          label(for='password') Password
+          input(
+            type='password'  
+            name='password'
+            id='password'
+            class='form-control'
+            placeholder='Password'
+          )
+            
+        button.btn.btn-primary(type='submit') Login

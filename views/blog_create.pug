@@ -1,0 +1,47 @@
+extends layout
+block content
+
+  h1= title
+
+  form(method='POST', action='')
+  
+    .form-group.row
+      //- Title
+      label.col-sm-2.col-form-label(for='title') Title
+      .col-sm-10
+        input.form-control(
+          type='text'
+          name='title'
+          id='title'
+          placeholder='Enter title'
+          value=(undefined===blog ? '' : blog.title)
+        )
+        
+    .form-group.row
+      //- Content
+      label.col-sm-2.col-form-label(for='content') Content
+      .col-sm-10
+        textarea.form-control(
+          name='content'
+          id='editor'
+          rows='6'
+          placeholder='Enter content for the blog'
+        )= (undefined===blog ? '' : blog.content)
+        
+    fieldset.form-group
+      .row
+        legend.col-form-label.col-sm-2.pt-0 Blog visibility
+        .col-sm-10
+          //- Radio buttons
+          each val, key in {'public': 'true', 'private': 'false'}
+            .form-check.form-check-inline
+              input.form-check-input(
+                type='radio'  
+                name='visibility'
+                id=key
+                value=val
+              )
+              label.form-check-label.text-capitalize(for=key)= key
+            
+    
+    button.btn.btn-primary(type='submit') Create

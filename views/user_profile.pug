@@ -1,0 +1,21 @@
+extends layout
+block content
+      
+  .row
+    .col-md-9
+    
+      if user && user.id === user_detail.id
+        .row
+          .col-sm
+            h1.display-4.mb-4 Profile
+            p= 'You have ' + (blogs_private_count + blogs_public_count) + ' blogs. (' + blogs_private_count + ' private, ' + blogs_public_count + ' public)'
+            p All your blogs are on this page. Only you can view the private blogs
+        each blog in users_blogs
+          +blog_list(blog.title.length, blog.url, blog.title, blog.content, blog.visible, moment(moment(blog.createdAt).toArray()).fromNow())
+      else
+        .row
+          .col-sm
+            h1.display-4.mb-4 All blogs by #{user_detail.username}
+            p.lead #{blogs_public_count} blogs
+        each blog in users_public_blogs
+          +blog_list(blog.title.length, blog.url, blog.title, blog.content, blog.visible, moment(moment(blog.createdAt).toArray()).fromNow())

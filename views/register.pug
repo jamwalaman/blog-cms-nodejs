@@ -1,0 +1,57 @@
+extends layout
+block content
+
+  h1= title
+  
+  .row
+    .col-md-8
+    
+      p.border-bottom.pb-3 Register to create and manage your blogs. All fields are required.
+    
+      form(method='POST', action='')
+        
+        .form-group
+          label(for='email') Email
+          input(
+            type='email'  
+            name='email'
+            id='email'
+            class='form-control'
+            placeholder='Email address'
+            value=(undefined===register ? '' : register.email)
+          )
+          small.form-text.text-muted You won't be getting any emails. This is just what you use to login
+          
+        .form-group
+          label(for='username') Username
+          input(
+            type='text'  
+            name='username'
+            id='username'
+            class='form-control'
+            placeholder='Login username'
+            value=(undefined===register ? '' : register.username)
+          )
+          small.form-text.text-muted Your public username. Only numbers and letters - with no space -  are allowed
+          
+        .form-group
+          label(for='password') Password
+          input(
+            type='password'  
+            name='password'
+            id='password'
+            class='form-control'
+            placeholder='Login password'
+          )
+          
+        .form-group
+          label(for='password2') Confirm password
+          input(
+            type='password'  
+            name='password2'
+            id='password2'
+            class='form-control'
+            placeholder='Confirm password'
+          )
+            
+        button.btn.btn-primary(type='submit') Register
