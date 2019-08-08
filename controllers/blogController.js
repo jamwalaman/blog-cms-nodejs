@@ -3,6 +3,7 @@ var Blog = require('../models/blog');
 // User model
 var User = require('../models/user');
 
+var app = require('../app');
 var async = require('async');
 
 const {body, validationResult} = require('express-validator/check');
@@ -59,8 +60,11 @@ exports.blog_detail = function (req, res, next) {
 			.exec(callback);
 		},
 	}, function(err, results) {
-		if (err) { return next(err); }
-		if (results.blog==null) { // No results.
+		// error in api usage
+		if (err && (req.app.get('env') === 'development')) {
+			return next(err);
+		}
+		if (results.blog==null) { // No results. (app.get('env') === 'production')
 			var err = new Error('Blog not found');
 			err.status = 404;
 			return next(err);

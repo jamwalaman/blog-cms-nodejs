@@ -3,6 +3,7 @@ var User = require('../models/user');
 // Blog model
 var Blog = require('../models/blog');
 
+var app = require('../app');
 var async = require('async');
 var passport = require('passport');
 
@@ -138,7 +139,10 @@ exports.user_detail = function(req, res, next) {
 			.exec(callback)
 		}
 	}, function(err, results) {
-		if(err) {return next(err);} // error in api usage
+		// error in api usage
+		if (err && (req.app.get('env') === 'development')) {
+			return next(err);
+		}
 		if(results.user==null) {
 			var err = new Error('User not found');
 			err.status = 404;

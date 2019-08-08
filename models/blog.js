@@ -22,14 +22,14 @@ BlogSchema
 .virtual('date')
 .get(function() {
 
-	var format_date = moment.parseZone(this.createdAt).local().format('LLLL');
+	var format_date = moment(this.createdAt).format('LLLL');
 
 	// 'createdAt' is not equal to 'updatedAt' so the blog's been updated.
 	if (this.createdAt.toString() !== this.updatedAt.toString()) {
 		var updated = moment(this.updatedAt).toArray();
 		format_date += ' (updated ' + moment(updated).fromNow() + ')';
 	}
-	return format_date;
+	return typeof format_date;
 
 });
 
