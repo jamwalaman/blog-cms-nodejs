@@ -5,7 +5,7 @@ var UserSchema = new Schema ({
 	email: {type: String, lowercase: true, required: true},
   username: {type: String,lowercase: true, required: true},
   password: {type: String, required: true},
-})
+}, {timestamps: true});
 
 // Virtual for users URL
 UserSchema

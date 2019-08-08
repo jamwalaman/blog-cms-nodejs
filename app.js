@@ -5,18 +5,24 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var session = require('express-session');
 var passport = require('passport');
-var config = require('./config/database');
 var moment = require('moment');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var catalogRouter = require('./routes/catalog');  //Import routes for "catalog" area of site
 
+var compression = require('compression');
+var helmet = require('helmet');
+
 var app = express();
 
 // Database connection
 var mongoose = require('mongoose');
-mongoose.connect(config.database, {useNewUrlParser: true});
+// Database URL for local development
+var devDB = 'mongodb://localhost:27017/blogsite_db_dev';
+// Use the production url if it's the prodcution environment
+var mongoDB = process.env.MONGODB_URI || devDB;
+mongoose.connect(mongoDB, {useNewUrlParser: true});
 var db = mongoose.connection;
 
 // Check connection
@@ -37,14 +43,23 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(helmet());
+app.use(compression()); // Compress all routes
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Express Session Middleware
-app.use(session({
-	secret: 'keyboard cat',
-	resave: true,
+var sess = {
+  secret: 'tardis',
+  resave: true,
 	saveUninitialized: true
-}))
+}
+
+if (app.get('env') === 'production') {
+  app.set('trust proxy', 1) // trust first proxy
+  sess.cookie.secure = true // serve secure cookies
+}
+
+app.use(session(sess));
 
 // Passport config
 require('./config/passport')(passport);

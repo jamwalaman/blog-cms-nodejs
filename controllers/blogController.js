@@ -49,11 +49,43 @@ exports.blog_list_get = function(req, res, next) {
 }
 
 
+// Display detail for a specific blog
+exports.blog_detail = function (req, res, next) {
+
+	async.parallel({
+		blog: function(callback) {
+			Blog.findById(req.params.id)
+			.populate('author')
+			.exec(callback);
+		},
+	}, function(err, results) {
+		if (err) { return next(err); }
+		if (results.blog==null) { // No results.
+			var err = new Error('Blog not found');
+			err.status = 404;
+			return next(err);
+		}
+		// Blog is private
+		if (!results.blog.visible) {
+			/* Blog is private, check for two conditions:
+				1) Make sure there is an authenticated user. There must be a user to view a private blog
+				2) If there is an authenticated user, make sure that they created the blog
+			If either of the condition is true, the user is redirected to the index page */
+			if( (!req.isAuthenticated()) || (req.isAuthenticated() && (results.blog.author.id != req.user._id)) ) {
+				req.flash('danger', 'Private blog');
+				return res.redirect('/');
+			}
+		}
+		// Successful, so render.
+		res.render('blog_detail', { title: results.blog.title, blog: results.blog } );
+	});
+
+}
+
+
 // GET request. Display blog create form
-exports.blog_create_get = function (req, res) {
-
+exports.blog_create_get = function (req, res, next) {
 	res.render('blog_create', {title: 'Create a blog'});
-
 }
 
 
@@ -103,32 +135,6 @@ exports.blog_create_post = [
 	}
 
 ]
-
-
-// Display detail for a specific blog
-exports.blog_detail = function (req, res, next) {
-
-	Blog.findById(req.params.id)
-		.populate('author')
-		.exec(function (err, blog_model) {
-			if (err) {return next(err);}
-			// Blog is private
-			if (!blog_model.visible) {
-				/* Blog is private, check for two conditions:
-					1) Make sure there is an authenticated user. There must be a user to view a private blog
-					2) If there is an authenticated user, make sure that they created the blog
-				If either of the condition is true, the user is redirected to the index page */
-				if( (!req.isAuthenticated()) || (req.isAuthenticated() && (blog_model.author.id != req.user._id)) ) {
-					req.flash('danger', 'Private blog');
-					return res.redirect('/');
-				}
-			}
-			// Blog is public, so render the view
-			res.render('blog_detail', {title: blog_model.title, blog: blog_model});
-
-		});
-
-}
 
 
 // Display Blog update form on GET.
