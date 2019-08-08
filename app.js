@@ -6,6 +6,7 @@ var logger = require('morgan');
 var session = require('express-session');
 var passport = require('passport');
 var moment = require('moment');
+var favicon = require('serve-favicon')
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -15,6 +16,8 @@ var compression = require('compression');
 var helmet = require('helmet');
 
 var app = express();
+
+app.use(favicon(path.join(__dirname, 'favicon.ico')))
 
 // Database connection
 var mongoose = require('mongoose');
@@ -56,7 +59,6 @@ var sess = {
 
 if (app.get('env') === 'production') {
   app.set('trust proxy', 1) // trust first proxy
-  sess.cookie.secure = true // serve secure cookies
 }
 
 app.use(session(sess));
@@ -86,6 +88,7 @@ app.use(function (req, res, next) {
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/catalog', catalogRouter);  // Add catalog routes to middleware chain.
+app.get('/favicon.ico', (req, res) => res.status(204));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
