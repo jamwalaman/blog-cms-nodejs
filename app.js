@@ -51,6 +51,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 var sess = {
   secret: 'tardis',
   resave: true,
+	cookie: {},
 	saveUninitialized: true
 }
 
