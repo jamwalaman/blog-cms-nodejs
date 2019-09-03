@@ -29,7 +29,7 @@ BlogSchema
 		var updated = moment(this.updatedAt).toArray();
 		format_date += ' (updated ' + moment(updated).fromNow() + ')';
 	}
-	return typeof format_date;
+	return format_date;
 
 });
 
