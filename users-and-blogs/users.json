@@ -1,0 +1,30 @@
+{
+  "_id": {
+    "$oid": "5d86f82ed62e132d70a5d3ab"
+  },
+  "email": "john@smith.com",
+  "username": "john",
+  "password": "$2a$10$6FpSpUDAx6UHSN9l2m2Nbea.t.kKMdqIjk9pjZP/GqbXg4NAaculi",
+  "createdAt": {
+    "$date": "2019-09-22T04:27:26.192Z"
+  },
+  "updatedAt": {
+    "$date": "2019-09-22T04:27:26.192Z"
+  },
+  "__v": 0
+}
+{
+  "_id": {
+    "$oid": "5d86f882d62e132d70a5d3ad"
+  },
+  "email": "sherlock@holmes.com",
+  "username": "sherlock",
+  "password": "$2a$10$Kbsypm35nwtI2mSudnXgFuGRZhUFqVhw4N6EP5jdVcj6YnfISqoZy",
+  "createdAt": {
+    "$date": "2019-09-22T04:28:50.904Z"
+  },
+  "updatedAt": {
+    "$date": "2019-09-22T04:28:50.904Z"
+  },
+  "__v": 0
+}

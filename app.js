@@ -72,7 +72,6 @@ app.use(passport.session());
 
 app.all('*', function(req, res, next){
 	res.locals.user = req.user || null;
-	res.locals.lpage = req.headers.referer;
 	next();
 });
 

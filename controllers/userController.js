@@ -106,9 +106,13 @@ exports.user_create_post = [
 
 ]
 
-
-// Display detail page for a specific User.
+// Display detail page for a specific User
 exports.user_detail = function(req, res, next) {
+
+	// number of blogs per page
+	var perPage = 5;
+	// current page
+	var currentPage = (req.params.page) ? Number(req.params.page) : 1;
 
 	async.parallel({
 		user: function(callback) {
@@ -117,34 +121,42 @@ exports.user_detail = function(req, res, next) {
 			.exec(callback)
 		},
 		users_blogs: function(callback) {
-			// from the Blog model, find user by id
-			Blog.find({'author': req.params.id})
+			var query = {};
+			query.author = req.params.id;
+			// Show only public blogs if there's no logged in user. Or if the logged in user is not looking at their profile
+			if (!req.isAuthenticated() || (req.isAuthenticated() && req.user.id != req.params.id)) {
+				query.visible = true;
+			}
+			Blog.find(query)
+			.skip((perPage * currentPage) - perPage)
+			.limit(perPage)
 			.sort([ ['createdAt', 'descending'] ]) // sort by most recent blogs (by createdAt date)
 			.exec(callback)
 		},
-		users_public_blogs: function(callback) {
-			// from the Blog model, find user by id and their public blogs
-			Blog.find({'author': req.params.id, 'visible': true})
-			.sort([ ['createdAt', 'descending'] ]) // sort by most recent blogs (by createdAt date)
-			.exec(callback)
+		users_blogs_count: function(callback) {
+			var query = {};
+			query.author = req.params.id;
+			// Count only public blogs if there's no logged in user
+			if (!req.isAuthenticated() || (req.isAuthenticated() && req.user.id != req.params.id)) {
+				query.visible = true;
+			}
+			Blog.countDocuments(query).exec(callback)
 		},
 		users_private_blogs_count: function(callback) {
-			// from the Blogs model, find author by id and count all the private blogs
-			Blog.countDocuments({'author': req.params.id, 'visible': false})
-			.exec(callback)
-		},
-		users_public_blogs_count: function(callback) {
-			// from the Blogs model, find author by id and count the public blogs
-			Blog.countDocuments({'author': req.params.id, 'visible': true})
-			.exec(callback)
+			Blog.countDocuments({'author': req.params.id, 'visible': false}).exec(callback)
 		}
 	}, function(err, results) {
+
 		// error in api usage
 		if (err && (req.app.get('env') === 'development')) {
 			return next(err);
 		}
-		if(results.user==null) {
-			var err = new Error('User not found');
+		// Totalnumber of pages
+		var numOfPages = Math.ceil(results.users_blogs_count / perPage);
+		var pageNumArr = [];
+		for (var i = 1; i <= numOfPages; i++) {pageNumArr.push(i)}
+		if (pageNumArr.length && !pageNumArr.includes(currentPage)) {
+			var err = new Error('No user found');
 			err.status = 404;
 			return next(err);
 		}
@@ -153,13 +165,15 @@ exports.user_detail = function(req, res, next) {
 			title: 'All blogs by ' + results.user.username,
 			user_detail: results.user,
 			users_blogs: results.users_blogs,
-			users_public_blogs: results.users_public_blogs,
-			blogs_private_count: results.users_private_blogs_count,
-			blogs_public_count: results.users_public_blogs_count
+			users_blogs_count: results.users_blogs_count,
+			users_private_blogs_count: results.users_private_blogs_count,
+			numOfPages: numOfPages,
+			currentPage: currentPage
 		});
+
 	});
 
-};
+}
 
 
 // GET request. Display the user login form

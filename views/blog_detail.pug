@@ -1,17 +1,21 @@
 extends layout
 block content
-
+  
   .row
-    .col-md-8.mb-4
-    
+    .col-md
       //- If the article belongs logged in user, tell them if the blog is priavte
       if user
         if user.id == blog.author.id && !blog.visible
           p
             span.badge.badge-info Private blog
+            
+      //- Blog data is sanitized on insert and update. So !{blog.title} can be used instead of #{blog.title}
+      h1 !{blog.title}
       
-      //- Blog title
-      h1= blog.title
+
+  .row
+    .col-md-9.mb-4
+        
       .my-border.pl-3
         //- Blog author, with link to author's profile
         p.m-0.lead By:&nbsp
@@ -20,7 +24,7 @@ block content
         p.font-italic.font-weight-light= blog.date
     
       //- Blog content
-      p.content= blog.content
+      p.content !{blog.content}
       //- If the article belongs logged in user, show them the update and delete buttons
       if user
         if user.id == blog.author.id
@@ -28,3 +32,19 @@ block content
             a.btn.btn-secondary(role='button', href=blog.url + '/update') Update
           p
             a.btn.btn-danger.delete-blog(href='#', data-id=blog._id) Delete
+            
+    .col-md-3
+      .card.border-light
+        .card-header Recent blogs by #{blog.author.username}
+        .card-body
+          .list-group.list-group-flush
+            
+            - var i = 0
+            each recent_blog in users_recent_blogs
+              - var match = (recent_blog.author.id == blog.author.id) ? true : false
+              if match
+                //- Break out of the loop when i is 5. This gets the 5 most recent blogs from the author
+                if i === 5
+                  - break
+                a.list-group-item.list-group-item-action(href=`/catalog/blog/${recent_blog.id}` title=recent_blog.title)!= recent_blog.title.length < 60 ? recent_blog.title : recent_blog.title.slice(0, 60).trim() + '...'
+                - i++

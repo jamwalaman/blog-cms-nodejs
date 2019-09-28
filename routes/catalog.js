@@ -25,7 +25,7 @@ function isLoggedin(req, res, next) {
 router.get('/', blog_controller.index);
 
 // GET list of all blogs
-router.get('/blogs', blog_controller.blog_list_get);
+router.get('/blogs/:page?', blog_controller.blog_list_get);
 
 // GET request for creating a Blog. NOTE This must come before routes that display Blog (uses id)
 router.get('/blog/create', isLoggedin, blog_controller.blog_create_get);

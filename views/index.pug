@@ -8,7 +8,7 @@ block content
     .jumbotron
 
       h1.mb-4.display-4 Blogs Site
-      p.lead.pt-2.border-top.border-info.d-inline A blog site created with NodeJS, ExpressJS and MongoDB.
+      p.lead.pt-2.d-inline A blog site created with NodeJS, ExpressJS and MongoDB.
       p.lead Number of blogs: !{count}
       small Source code for this project can be found&nbsp
         a(href='https://github.com/jamwalaman/blog-cms-nodejs' target='_blank' title='Link to source code on GitHub' ) here
@@ -21,8 +21,8 @@ block content
           .card.mb-3
             .card-body
               h5.card-title
-                a.text-info(href=blog.url title=blog.title)= blog.title.length > 60 ? blog.title.slice(0, 30) + '...' : blog.title
-              p.card-text= blog.content.slice(0, 150) + '...'
+                a.text-info(href=blog.url title!=blog.title) !{blog.title}
+              p.card-text!= blog.content.slice(0, 150) + '...'
             .card-footer.text-muted By&nbsp
               a(href=blog.author.url, title='All blogs by ' + blog.author.username)= blog.author.username
               span= ', ' + moment(moment(blog.createdAt).toArray()).fromNow()

@@ -31,20 +31,49 @@ exports.index = function(req, res) {
 		res.render('index', { title: 'Home ', error: err, count: results.count, recent_blogs: results.recent_blogs });
 	});
 
-};
+}
 
 
 // GET request. Display a list of all blogs
 exports.blog_list_get = function(req, res, next) {
 
+	// number of blogs per page
+	var perPage = 5;
+	// current page
+	var currentPage = (req.params.page) ? Number(req.params.page) : 1;
+
 	// Find all blogs where the user has set the visibility to public
 	Blog.find({'visible': true})
+		.skip((perPage * currentPage) - perPage)
+		.limit(perPage)
 		.sort([ ['createdAt', 'descending'] ]) // sort by most recent blogs (by createdAt date)
 		.populate('author')
-		.exec(function (err, get_blogs) {
-			if (err) {return next(err);}
-			// Successful, so render
-			res.render('blog_list', {title: 'Blog List', all_blogs: get_blogs});
+		.exec(function(err, blogs) {
+			if (err) { return next(err); } // Error in API usage.
+			Blog.countDocuments({'visible': true}).exec(function(err, count) {
+
+				// Totalnumber of pages
+				var numOfPages = Math.ceil(count / perPage);
+
+				var pageNumArr = [];
+				for (var i = 1; i <= numOfPages; i++) {pageNumArr.push(i)}
+				/* So if the numOfPages is 6, the pageNumArr array is now [1, 2, 3, 4, 5, 6]
+				The user will get a "404 Not Found" error if they try to go "catalog/blogs/7"
+				or anything that's not in the pageNumArr array
+				*/
+				if (!pageNumArr.includes(currentPage)) {
+					var err = new Error('No blogs found');
+					err.status = 404;
+					return next(err);
+				}
+				res.render('blog_list', {
+					title: 'All Blogs',
+					blogs: blogs,
+					currentPage: currentPage,
+					numOfPages: numOfPages
+				})
+
+			})
 		});
 
 }
@@ -59,12 +88,18 @@ exports.blog_detail = function (req, res, next) {
 			.populate('author')
 			.exec(callback);
 		},
+		users_recent_blogs: function(callback) {
+			Blog.find({'visible': true}, 'title')
+			.populate('author')
+			.sort([ ['createdAt', 'descending'] ]) // sort by most recent blogs (by createdAt date)
+			.exec(callback);
+		}
 	}, function(err, results) {
 		// error in api usage
 		if (err && (req.app.get('env') === 'development')) {
 			return next(err);
 		}
-		if (results.blog==null) { // No results. (app.get('env') === 'production')
+		if (results.blog==null) { // No results
 			var err = new Error('Blog not found');
 			err.status = 404;
 			return next(err);
@@ -81,7 +116,7 @@ exports.blog_detail = function (req, res, next) {
 			}
 		}
 		// Successful, so render.
-		res.render('blog_detail', { title: results.blog.title, blog: results.blog } );
+		res.render('blog_detail', { title: results.blog.title, blog: results.blog, users_recent_blogs: results.users_recent_blogs } );
 	});
 
 }

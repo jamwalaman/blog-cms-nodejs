@@ -24,3 +24,11 @@ body {
 .my-border {
   border-left: 5px solid #17a2b8;
 }
+
+.excerpt_border {
+  border-bottom: 2px solid #33b5e5;
+}
+
+footer {
+  background-color: #e6e6e6;
+}

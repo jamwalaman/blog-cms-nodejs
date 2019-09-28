@@ -1,0 +1,31 @@
+mixin nextPageLink(url)
+  - var next = currentPage + 1;
+  if next <= numOfPages
+    li.page-item
+      a.page-link(href=url + next) Next
+
+mixin prevPageLink(url)
+  - var prev = currentPage - 1;
+  if prev > 0
+    li.page-item
+      a.page-link(href=url + prev) Previous
+      
+mixin numberLinks(url)
+  - for (var i = 1; i <= numOfPages; i++)
+    if i == currentPage
+      li.page-item.active(aria-current="page")
+        a.page-link(href=url + i)= i
+    else
+      li.page-item
+        a.page-link(href=url + i)= i
+
+mixin paginationHTML(url)
+
+  if numOfPages > 1
+
+    nav(aria-label="Pagination nav")
+        
+      ul.pagination.justify-content-center.mt-5
+        +prevPageLink(url)
+        +numberLinks(url)
+        +nextPageLink(url)

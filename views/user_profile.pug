@@ -1,21 +1,19 @@
 extends layout
 block content
-      
-  .row
-    .col-md-9
+  
+  -
+    // If there's a loggedin user and user.id is the same user_detail.id, it means the loggedin user is viewing thier page
+    var h1 = (user && user.id === user_detail.id) ? "Profile" : "Blogs by " + user_detail.username
+    var blogs = (users_blogs_count) ? 'You have ' + (users_blogs_count) + ' blogs (' + (users_blogs_count - users_private_blogs_count) + ' public and ' + users_private_blogs_count + ' private). Only you can view the private blogs' : 'You have no blogs <a href="/catalog/blog/create">Click here</a> to create one'
+    var p = (user && user.id === user_detail.id) ? blogs : users_blogs_count + ' blogs'
+  
+  h1.display-4.text-center= h1
+  p.lead.text-center!= p
     
-      if user && user.id === user_detail.id
-        .row
-          .col-sm
-            h1.display-4.mb-4 Profile
-            p= 'You have ' + (blogs_private_count + blogs_public_count) + ' blogs. (' + blogs_private_count + ' private, ' + blogs_public_count + ' public)'
-            p All your blogs are on this page. Only you can view the private blogs
-        each blog in users_blogs
-          +blog_list(blog.title.length, blog.url, blog.title, blog.content, blog.visible, moment(moment(blog.createdAt).toArray()).fromNow())
-      else
-        .row
-          .col-sm
-            h1.display-4.mb-4 All blogs by #{user_detail.username}
-            p.lead #{blogs_public_count} blogs
-        each blog in users_public_blogs
-          +blog_list(blog.title.length, blog.url, blog.title, blog.content, blog.visible, moment(moment(blog.createdAt).toArray()).fromNow())
+  each blog in users_blogs
+    //- arguements for blog_list mixin: length, url, title, content, visible, date, all_blogs_page
+    //- This is the user profile page so don't need to provide the "user" and "userlink" arguements
+    +blog_list(blog.title.length, blog.url, blog.title, blog.content, blog.visible, moment(moment(blog.createdAt).toArray()).fromNow(), all_blogs_page = false)
+
+  include pagination
+  +paginationHTML('/users/profile/' + user_detail.id + '/')

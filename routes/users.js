@@ -23,7 +23,7 @@ router.get('/register', isLoggedin, user_controller.user_create_get);
 router.post('/register', user_controller.user_create_post);
 
 // GET request for user profile page
-router.get('/profile/:id', user_controller.user_detail);
+router.get('/profile/:id/:page?', user_controller.user_detail);
 
 // GET request for user login form
 router.get('/login', isLoggedin, user_controller.user_login_get);

@@ -1,23 +1,23 @@
 extends layout
 block content
-
-  .row
-    .col-md-9
-    
-      h1.display-4.mb-4= title
   
-      each blog in all_blogs
-        +blog_list(blog.title.length, blog.url, blog.title, blog.content, blog.visible, moment(moment(blog.createdAt).toArray()).fromNow(), blog.author.username, blog.author.url)
+  h1.display-4.mb-4.text-center= title
+      
+  each blog in blogs
+    //- arguements for blog_list mixin: length, url, title, content, visible, date, all_blogs_page, user, userlink
+    +blog_list(blog.title.length, blog.url, blog.title, blog.content, blog.visible, moment(moment(blog.createdAt).toArray()).fromNow(), all_blogs_page = true, blog.author.username, blog.author.url)
           
-      else
-        if user
-          //- Logged in user. Show them the link to create blog
-          p No blogs to show. 
-            a(href='/catalog/blog/create') Create a blog
-        else
-          //- No logged in user. Shwo them the register and login link
-          p No blogs to show. 
-            a(href='/users/register') Register
-            |  or 
-            a(href='/users/login') login
-            |  to create a blog
+  else
+    if user
+      //- Logged in user. Show them the link to create blog
+      p No blogs to show. 
+        a(href='/catalog/blog/create') Create a blog
+    else
+      p No blogs to show. 
+        a(href='/users/register') Register
+        |  or 
+        a(href='/users/login') login
+        |  to create a blog
+    
+  include pagination
+  +paginationHTML('/catalog/blogs/')

@@ -1,7 +1,7 @@
 extends layout
 block content
 
-  h1= title
+  h1 !{title}
 
   form(method='POST', action='')
   
@@ -14,7 +14,7 @@ block content
           name='title'
           id='title'
           placeholder='Enter title'
-          value=blog.title
+          value!=blog.title
         )
         
     .form-group.row
@@ -26,7 +26,7 @@ block content
           id='content'
           rows='6'
           placeholder='Enter content for the blog'
-        )= blog.content
+        )!= blog.content
         
     fieldset.form-group
       .row
