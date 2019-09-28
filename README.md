@@ -9,3 +9,5 @@ And just because I wanted to try something a little different, I installed Mongo
 Assuming Node.js and MongoDB is installed, do the following:
 * Make sure MongoDB is running locally
 * Type 'npm install' to install all the dependencies. And then type 'npm run start'. Open a browser and type localhost:3000
+
+There are two json files in "users-and-blogs" folder that have some dummy content. Go to this folder in the terminal and type `mongoimport --drop --db blogsite_db_dev --collection users --file users.json`. This will import the users. Password for both users is password. Do the same for blogs
