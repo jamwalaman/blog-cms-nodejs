@@ -19,7 +19,7 @@ mixin blog_list(length, url, title, content, visible, date, all_blogs_page, user
 			p!= content.slice(0, 630) + '...'
 
 doctype html
-html(lang='en')
+html.h-100(lang='en')
 	head
 		title !{title} | Blog Site
 		meta(charset='utf-8')
@@ -28,7 +28,7 @@ html(lang='en')
 		script(src='https://code.jquery.com/jquery-3.4.1.js', integrity='sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=', crossorigin='anonymous')
 		script(src='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js', integrity='sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM', crossorigin='anonymous')
 		link(rel='stylesheet', href='/stylesheets/style.css')
-	body
+	body.d-flex.flex-column.h-100
 
 		nav(class='navbar navbar-expand-md navbar-dark fixed-top bg-dark')
 			div(class='container')
@@ -68,7 +68,7 @@ html(lang='en')
 						
 			block content
 			
-		footer
+		footer.mt-auto
 			.container.py-3.text-muted.small A project I worked on to learn about NodeJS. GitHub repo can be found&nbsp
 				a(href='https://github.com/jamwalaman/blog-cms-nodejs' target='_blank' title='Link to source code on GitHub') here
 			

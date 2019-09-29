@@ -4,8 +4,9 @@ block content
   -
     // If there's a loggedin user and user.id is the same user_detail.id, it means the loggedin user is viewing thier page
     var h1 = (user && user.id === user_detail.id) ? "Profile" : "Blogs by " + user_detail.username
-    var blogs = (users_blogs_count) ? 'You have ' + (users_blogs_count) + ' blogs (' + (users_blogs_count - users_private_blogs_count) + ' public and ' + users_private_blogs_count + ' private). Only you can view the private blogs' : 'You have no blogs <a href="/catalog/blog/create">Click here</a> to create one'
-    var p = (user && user.id === user_detail.id) ? blogs : users_blogs_count + ' blogs'
+    var b = (users_blogs_count > 1) ? 'blogs' : 'blog'
+    var blogs = (users_blogs_count) ? 'You have ' + (users_blogs_count) + ' ' + b + ' (' + (users_blogs_count - users_private_blogs_count) + ' public and ' + users_private_blogs_count + ' private). Only you can view the private blogs' : 'You have no blogs <a href="/catalog/blog/create">Click here</a> to create one'
+    var p = (user && user.id === user_detail.id) ? blogs : users_blogs_count + ' ' + b
   
   h1.display-4.text-center= h1
   p.lead.text-center!= p
