@@ -61,7 +61,7 @@ exports.blog_list_get = function(req, res, next) {
 				The user will get a "404 Not Found" error if they try to go "catalog/blogs/7"
 				or anything that's not in the pageNumArr array
 				*/
-				if (!pageNumArr.includes(currentPage)) {
+				if (pageNumArr.length && !pageNumArr.includes(currentPage)) {
 					var err = new Error('No blogs found');
 					err.status = 404;
 					return next(err);
